@@ -10,3 +10,7 @@ The geo-tag param is optional right now.
 
 For example a tweet "I love CU Boulder" with geo-tag "180 360" could be clustered as:
 Document("1", "I love CU Boulder", "180 360"
+
+Added code for fetching Tweets
+
+
