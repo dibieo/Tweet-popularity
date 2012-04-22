@@ -1,0 +1,12 @@
+This project is intended to demonstrate how carrot2's JAVA clustering API works
+
+The main file is ClusteringDocumentList.java
+It is located in the package org.carrot2.examples.clustering.
+
+It includes 20 tweets that are clustered into 9 clusters
+Each tweet is passed in as an org.carrot2.Document object with 3 params:
+Tweet id, tweet, geo-tag.
+The geo-tag param is optional right now.
+
+For example a tweet "I love CU Boulder" with geo-tag "180 360" could be clustered as:
+Document("1", "I love CU Boulder", "180 360"
