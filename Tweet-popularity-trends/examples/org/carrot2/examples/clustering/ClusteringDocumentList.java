@@ -17,7 +17,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.carrot2.clustering.lingo.LingoClusteringAlgorithm;
-import org.carrot2.clustering.synthetic.ByUrlClusteringAlgorithm;
 import org.carrot2.core.Cluster;
 import org.carrot2.core.Controller;
 import org.carrot2.core.ControllerFactory;
@@ -72,6 +71,7 @@ public class ClusteringDocumentList
        /* Prepare Carrot2 documents */
             final ArrayList<Document> documents = new ArrayList<Document>();
             
+<<<<<<< HEAD
             final Document [] tweets = {
              new Document(" 1", "I love the NBA", "180 300"),
              new Document(" 2", "Jermey Ling is the best NBA plaer", "180 300"),
@@ -96,6 +96,33 @@ public class ClusteringDocumentList
 
             };
 
+=======
+//            final Document [] tweets = {
+//             new Document(" 1", "I love the NBA", "180 300"),
+//             new Document(" 2", "Jermey Ling is the best NBA plaer", "180 300"),
+//             new Document(" 3", "NBA finals are here", "180 300"),
+//             new Document(" 4", "Did you watch Real madrid  game", "180 300"),
+//             new Document(" 5", "Real madrid won hurray!", "180 300"),
+//             new Document(" 6", "Viva Madrid", "180 300"),
+//             new Document(" 7", "Tupac hologram was so cool", "180 300"),
+//             new Document(" 8", "I love the NBA", "180 300"),
+//             new Document("9", "Good game Real Madrid", "180 300"),
+//             new Document("10", "Congrats to all madrid fans", "180 300"),
+//             new Document("11", "Glad i woke up early for the madrid game", "180 300"),
+//             new Document("12", "Oh finals are coming soon", "180 300"),
+//             new Document("13", "hope i do well on final exams", "180 300"),
+//             new Document("14", "Finals!", "180 300"),
+//             new Document("15", "I'm tired of finals", "180 300"),
+//             new Document("16", "how do i learn how to program", "180 300"),
+//             new Document("17", "writing alot of java", "180 300"),
+//             new Document("18", "java is fun", "180 300"),
+//             new Document("19", "cochella was super fun especially with the tupac hologram", "180 300"),
+//             new Document("20", "tupac back to life", "180 300")
+//
+//            };
+            
+            Document[] tweets=new CrawlingTweets().run(100);
+>>>>>>> ff12ab3635c31165dc0aedea8b16aa74ec9a0cb8
             documents.addAll(Arrays.asList(tweets));
 
             /* A controller to manage the processing pipeline. */
@@ -108,7 +135,6 @@ public class ClusteringDocumentList
             final ProcessingResult byTopicClusters = controller.process(documents, null,
                 LingoClusteringAlgorithm.class);
             final List<Cluster> clustersByTopic = byTopicClusters.getClusters();
-           
             
             ConsoleFormatter.displayClusters(clustersByTopic);
        }
