@@ -95,6 +95,7 @@ public class ClusteringDocumentList
              new Document("20", "tupac back to life", "180 300")
 
             };
+
             documents.addAll(Arrays.asList(tweets));
 
             /* A controller to manage the processing pipeline. */
