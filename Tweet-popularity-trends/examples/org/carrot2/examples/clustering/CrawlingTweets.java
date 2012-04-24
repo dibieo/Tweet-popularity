@@ -11,12 +11,9 @@ import org.carrot2.core.Document;
 import twitter4j.internal.org.json.JSONException;
 import twitter4j.internal.org.json.JSONObject;
 
-
 public class CrawlingTweets {
-	String boundingBox="-179.15,18.9,-66.94,71.44";
-	String urlSchema = "https://stream.twitter.com/1/statuses/filter.json?locations=".concat(boundingBox);
-	
-	public Document[] run(int TweetsNo){
+	public Document[] run(int TweetsNo, String boundingBox){
+		String url="https://stream.twitter.com/1/statuses/filter.json?locations=".concat(boundingBox);
 		Document[] TweetsCollection = new Document[TweetsNo];
 		Authenticator.setDefault(new Authenticator() {
 			protected PasswordAuthentication getPasswordAuthentication() {
@@ -25,7 +22,7 @@ public class CrawlingTweets {
 		});
 		
 		try {
-			URLConnection connection = new URL(urlSchema).openConnection();
+			URLConnection connection = new URL(url).openConnection();
 			BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
 			String readline = "";
 			int count=0;
@@ -36,19 +33,20 @@ public class CrawlingTweets {
 				JSONObject data = new JSONObject(readline);
 				if(data.has("text")&&!data.get("geo").toString().equals("null")){
 					String tweet=data.get("text").toString();
-					tweet=tweet.replaceAll("RT\\p{Blank}", "").trim();
-					tweet=tweet.replaceAll("RT", "").trim();
-					tweet=tweet.replaceAll("@[a-zA-z_0-9]+[\\space|:\\space]", "").trim();
-					tweet=tweet.replaceAll("\\p{Space}", " ").trim();
-					tweet=tweet.replaceAll("http://[a-zA-z_0-9/\\p{Punct}]+","").trim();
-					tweet=tweet.replaceAll("\\p{Punct}", "").trim();
+					tweet=POSTagger.POSTaggerGetNouns(tweet);
+//					tweet=tweet.replaceAll("RT\\p{Blank}", "").trim();
+//					tweet=tweet.replaceAll("RT", "").trim();
+//					tweet=tweet.replaceAll("@[a-zA-z_0-9]+[\\space|:\\space]", "").trim();
+//					tweet=tweet.replaceAll("\\p{Space}", " ").trim();
+//					tweet=tweet.replaceAll("http://[a-zA-z_0-9/\\p{Punct}]+","").trim();
+//					tweet=tweet.replaceAll("\\p{Punct}", "").trim();
 					
 					String coordinates=new JSONObject(data.get("geo").toString()).getString("coordinates").toString();
 					coordinates=coordinates.replace("[", "");
 					coordinates=coordinates.replace("]", "");
 					coordinates=coordinates.replace(",", " ");
 					
-					if(tweet.length()>20){
+					if(tweet.length()>2){
 						//String str="\""+count+"\"\t\""+tweet+"\"\t\""+coordinates+"\"\n";	
 						TweetsCollection[count]=new Document(String.valueOf(count),tweet,coordinates);
 						count++;
@@ -67,5 +65,4 @@ public class CrawlingTweets {
 		}
 		return null;
 	}
-	
 }
