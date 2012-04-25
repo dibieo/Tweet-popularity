@@ -90,6 +90,7 @@ public class ClusteringDocumentList
             System.out.println("Finished clustering");
           
             GetClusterStates cs = new GetClusterStates();
+            //Print out the dictionary of cluster by states
             System.out.println(cs.returnClusterStates(clustersByTopic));
              
             //ConsoleFormatter.displayClusters(clustersByTopic);
