@@ -73,7 +73,7 @@ public class ClusteringDocumentList
             
 
             
-            Document[] tweets=new CrawlingTweets().run(100);
+            Document[] tweets=new CrawlingTweets().run(100,"-179.15,18.9,-66.94,71.44");
             documents.addAll(Arrays.asList(tweets));
 
             /* A controller to manage the processing pipeline. */
@@ -87,6 +87,7 @@ public class ClusteringDocumentList
             final ProcessingResult byTopicClusters = controller.process(documents, null,
                 LingoClusteringAlgorithm.class);
             final List<Cluster> clustersByTopic = byTopicClusters.getClusters();
+
             System.out.println("Finished clustering");
           
             GetClusterStates cs = new GetClusterStates();
@@ -95,6 +96,7 @@ public class ClusteringDocumentList
              
             //ConsoleFormatter.displayClusters(clustersByTopic);
             ConsoleFormatter.displayJustClusterTopics(clustersByTopic);
+
        }
     }
 }
