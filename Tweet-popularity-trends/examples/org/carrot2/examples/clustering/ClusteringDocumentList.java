@@ -83,11 +83,17 @@ public class ClusteringDocumentList
              * Perform clustering by topic using the Lingo algorithm. Lingo can 
              * take advantage of the original query, so we provide it along with the documents.
              */
+            System.out.println("Begining clustering");
             final ProcessingResult byTopicClusters = controller.process(documents, null,
                 LingoClusteringAlgorithm.class);
             final List<Cluster> clustersByTopic = byTopicClusters.getClusters();
-            
-            ConsoleFormatter.displayClusters(clustersByTopic);
+            System.out.println("Finished clustering");
+          
+            GetClusterStates cs = new GetClusterStates();
+            System.out.println(cs.returnClusterStates(clustersByTopic));
+             
+            //ConsoleFormatter.displayClusters(clustersByTopic);
+            ConsoleFormatter.displayJustClusterTopics(clustersByTopic);
        }
     }
 }

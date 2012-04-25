@@ -97,6 +97,17 @@ public class ConsoleFormatter
                 clusterDetailsFormatter);
         }
     }
+    
+    /**
+     * Displays just the topic of each cluster
+     * @param clusters
+     */
+    public static void displayJustClusterTopics(final Collection<Cluster> clusters){
+        System.out.println("\n\nCreated " + clusters.size() + " clusters\n");
+        for (Cluster c : clusters){
+    	displayOnlyTopLevelClusterDetail(c, 0, ClusterDetailsFormatter.INSTANCE);
+        }
+    }
 
     private static void displayDocument(final int level, Document document)
     {
@@ -114,6 +125,37 @@ public class ConsoleFormatter
         System.out.println();
     }
 
+    
+    /**
+     * Displays the Top level cluster details.
+     * @param cluster
+     * @param level
+     * @param maxNumberOfDocumentsToShow
+     * @param clusterDetailsFormatter
+     */
+    private static void displayOnlyTopLevelClusterDetail(Cluster cluster, int level, ClusterDetailsFormatter clusterDetailsFormatter)
+        {
+            final String label = cluster.getLabel();
+
+            // indent up to level and display this cluster's description phrase
+            for (int i = 0; i < level; i++)
+            {
+                System.out.print("  ");
+            }
+            System.out.println(label + "  "
+                + clusterDetailsFormatter.formatClusterDetails(cluster));
+        }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     private static void displayCluster(final int level, String tag, Cluster cluster,
         int maxNumberOfDocumentsToShow, ClusterDetailsFormatter clusterDetailsFormatter)
     {

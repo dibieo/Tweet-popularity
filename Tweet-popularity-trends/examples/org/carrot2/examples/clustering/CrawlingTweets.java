@@ -29,7 +29,8 @@ public class CrawlingTweets {
 			BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
 			String readline = "";
 			int count=0;
-			System.out.println("Starting to fetch Tweets..");
+			System.out.println("Starting to fetch Tweets..\n");
+
 			while ((readline = in.readLine()) != null) {
 				if(count==TweetsNo)
 					break;
@@ -46,17 +47,17 @@ public class CrawlingTweets {
 					String coordinates=new JSONObject(data.get("geo").toString()).getString("coordinates").toString();
 					coordinates=coordinates.replace("[", "");
 					coordinates=coordinates.replace("]", "");
-					coordinates=coordinates.replace(",", " ");
 					
-					if(tweet.length()>20){
+					if(tweet.length() > 9){
 						//String str="\""+count+"\"\t\""+tweet+"\"\t\""+coordinates+"\"\n";	
 						TweetsCollection[count]=new Document(String.valueOf(count),tweet,coordinates);
+						//System.out.print(count);
 						count++;
 					}
 				}	
 			}
 			in.close();
-			System.out.println("Finished fetching");
+			System.out.println("\nFinished fetching");
 			return TweetsCollection;
 		} catch (MalformedURLException e1) {
 			e1.printStackTrace();
