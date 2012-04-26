@@ -62,7 +62,7 @@ public class TweetState {
 	     //JSONArray arr = new JSONArray(c.getJSONArray("results"));
 	     JSONArray data = c.getJSONArray("results");
 	     //System.out.println(data.length());
-	     
+
 	     JSONArray d = data.getJSONObject(0).getJSONArray("address_components");
 	     //System.out.println(d.length());
 	     
