@@ -16,6 +16,7 @@ public class CrawlingTweets {
 		String url="https://stream.twitter.com/1/statuses/filter.json?locations=".concat(boundingBox);
 		Document[] TweetsCollection = new Document[TweetsNo];
 		Authenticator.setDefault(new Authenticator() {
+			@Override
 			protected PasswordAuthentication getPasswordAuthentication() {
 				return new PasswordAuthentication("hjhang", "hungry1526!".toCharArray());
 			}
