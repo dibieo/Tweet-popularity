@@ -74,7 +74,7 @@ public class ClusteringDocumentList
             
 
             
-            Document[] tweets=new CrawlingTweets().run(100,"-179.15,18.9,-66.94,71.44");
+            Document[] tweets=new CrawlingTweets().run(120,"-179.15,18.9,-66.94,71.44");
             documents.addAll(Arrays.asList(tweets));
 
             /* A controller to manage the processing pipeline. */

@@ -1,14 +1,11 @@
 package org.carrot2.examples.clustering;
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
-import java.net.MalformedURLException;
 import java.net.URL;
 
 import twitter4j.internal.org.json.JSONArray;
 import twitter4j.internal.org.json.JSONException;
 import twitter4j.internal.org.json.JSONObject;
-import java.util.*;
 public class TweetState {
 
 
@@ -23,7 +20,7 @@ public class TweetState {
 	 */
 	public String getState(String latlng){
 	
-	 System.out.println("Latlng passed is : " + latlng);
+	 //System.out.println("Latlng passed is : " + latlng);
   
 	try {
 		
@@ -32,7 +29,7 @@ public class TweetState {
 	    
 	} catch (Exception e) {
 		// TODO Auto-generated catch block
-		System.out.println("Trying again to get latlng...");
+		//System.out.println("Trying again to get latlng...");
 		try {
 		//Sometimes we get exceptions so we try again
 		this.process(latlng);
@@ -57,12 +54,14 @@ public class TweetState {
 	        content.append(line);
 	       }
 	     reader.close();
-
+	   //  System.out.println("JSON string:" + content.toString()); 
 		 JSONObject c = new JSONObject(content.toString());
 	     //JSONArray arr = new JSONArray(c.getJSONArray("results"));
 	     JSONArray data = c.getJSONArray("results");
 	     //System.out.println(data.length());
 
+	     
+	     if (data.length() >= 1 ){
 	     JSONArray d = data.getJSONObject(0).getJSONArray("address_components");
 	     //System.out.println(d.length());
 	     
@@ -75,6 +74,7 @@ public class TweetState {
 	    	  }
 	    	  //System.out.println(obj.get("types"));
 	    	}
+	     }
 	}
 	
 	/**
@@ -84,6 +84,7 @@ public class TweetState {
 	public static void main (String [] args){
 		
 		TweetState ts = new TweetState();
+		System.out.println("Hello");
 		System.out.println(ts.getState("39.50091362,-84.33465421"));
 	}
    
