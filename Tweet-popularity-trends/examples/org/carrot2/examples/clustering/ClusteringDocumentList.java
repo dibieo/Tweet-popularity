@@ -103,11 +103,15 @@ public class ClusteringDocumentList {
 
 		/* Prepare Carrot2 documents */
 		final ArrayList<Document> documents = new ArrayList<Document>();
-		Document[] tweets = new CrawlingTweets().run(100,"-179.15,18.9,-66.94,71.44");
+		Document[] tweets = new CrawlingTweets().run(30,"-179.15,18.9,-66.94,71.44");
 		documents.addAll(Arrays.asList(tweets));
 
 		/* A controller to manage the processing pipeline. */
 		final Controller controller = ControllerFactory.createSimple();
+            
+            //Document[] tweets=new CrawlingTweets().run(120,"-179.15,18.9,-66.94,71.44");
+            //documents.addAll(Arrays.asList(tweets));
+
 
 		/*
 		 * Perform clustering by topic using the Lingo algorithm. Lingo can take

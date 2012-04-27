@@ -21,9 +21,11 @@ public class TweetState {
 	 * @param String latlng
 	 * @return String
 	 */
+
 	public String getState(String latlng) {
 		System.out.println("Processing : " + latlng);
 		// Processes the JSON object to get back the state
+
 		try {
 			this.process(latlng);
 		} catch (Exception e) {
@@ -63,6 +65,7 @@ public class TweetState {
 				}
 			}
 		}
+
 	}
 
 	/**
@@ -72,6 +75,7 @@ public class TweetState {
 	 */
 	public static void main(String[] args) {
 		TweetState ts = new TweetState();
+		System.out.println("Hello");
 		System.out.println(ts.getState("39.50091362,-84.33465421"));
 	}
 
