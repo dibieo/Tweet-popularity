@@ -12,9 +12,12 @@ import twitter4j.internal.org.json.JSONException;
 import twitter4j.internal.org.json.JSONObject;
 
 public class CrawlingTweets {
+	
 	public Document[] run(int TweetsNo, String boundingBox){
 		String url="https://stream.twitter.com/1/statuses/filter.json?locations=".concat(boundingBox);
 		Document[] TweetsCollection = new Document[TweetsNo];
+		
+		//Setup authentication before using streaming API
 		Authenticator.setDefault(new Authenticator() {
 			@Override
 			protected PasswordAuthentication getPasswordAuthentication() {
@@ -23,12 +26,13 @@ public class CrawlingTweets {
 		});
 		
 		try {
+			//Create connection with streaming API
 			URLConnection connection = new URL(url).openConnection();
 			BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-			String readline = "";
 			int count=0;
-			System.out.println("Starting to fetch Tweets..\n");
-
+			
+			System.out.println("Start fetching Tweets...");
+			String readline = "";
 			while ((readline = in.readLine()) != null) {
 				if(count==TweetsNo)
 					break;
@@ -47,17 +51,15 @@ public class CrawlingTweets {
 					coordinates=coordinates.replace("[", "");
 					coordinates=coordinates.replace("]", "");
 					
-
 					if(tweet.length()>2){
 						//String str="\""+count+"\"\t\""+tweet+"\"\t\""+coordinates+"\"\n";	
 						TweetsCollection[count]=new Document(String.valueOf(count),tweet,coordinates);
-						//System.out.print(count);
 						count++;
 					}
 				}	
 			}
+			System.out.println("Finished fetching...");
 			in.close();
-			System.out.println("\nFinished fetching");
 			return TweetsCollection;
 		} catch (MalformedURLException e1) {
 			e1.printStackTrace();
