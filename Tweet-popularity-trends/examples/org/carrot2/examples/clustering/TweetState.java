@@ -3,6 +3,7 @@ package org.carrot2.examples.clustering;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.URL;
+import java.net.URLEncoder;
 
 import twitter4j.internal.org.json.JSONArray;
 import twitter4j.internal.org.json.JSONException;
@@ -23,7 +24,7 @@ public class TweetState {
 	 */
 
 	public String getState(String latlng) {
-		System.out.println("Processing : " + latlng);
+		//System.out.println("Processing : " + latlng);
 		// Processes the JSON object to get back the state
 
 		try {
@@ -45,7 +46,8 @@ public class TweetState {
 	 * 
 	 * @throws JSONException
 	 */
-	public void process(String latlng) throws Exception {
+	public void process(String lat_lng) throws Exception {
+		String latlng = URLEncoder.encode(lat_lng, "UTF-8");
 		url = new URL("http://maps.googleapis.com/maps/api/geocode/json?"+ "latlng=" + latlng + "&sensor=false");
 		final BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream()));
 		while ((line = reader.readLine()) != null) {

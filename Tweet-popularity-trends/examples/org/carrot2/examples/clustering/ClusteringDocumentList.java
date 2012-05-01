@@ -42,10 +42,44 @@ import org.carrot2.examples.ConsoleFormatter;
  * @see UsingCachingController
  */
 public class ClusteringDocumentList {
+	/**
+	 * Sequentially gets all the cluster states and outputs the result.
+	 * 
+	 * @param cl List of Clusters
+	 */
+	public static HashMap<String, List<HashMap<String, Integer>>> processSequential(List<Cluster> cl) {
+		System.out.println("Calculating tweets popularity sequentially...");
+		long start_time = System.nanoTime();
+		HashMap<String, List<HashMap<String, Integer>>> result = GetClusterStates.sequentialGetClusterStates(cl);
+		long end_time = System.nanoTime();
+		System.out.println("Finished!\nSequential processing took: "+ (end_time - start_time) / 1.0e9 + "s\n");
+		return result;
+	}
 
-	public static void rankTopics(
-			HashMap<String, List<HashMap<String, Integer>>> topics,final double per) {
+	
+	/**
+	 * Concurrently gets all cluster states and outputs the results
+	 * 
+	 * @param cl ListOfClusters
+	 */
+	public static HashMap<String, List<HashMap<String, Integer>>> processConcurrent(List<Cluster> cl) {
+		System.out.println("Calculating tweets popularity concurrently...");
+		long start_time = System.nanoTime();
+		HashMap<String, List<HashMap<String, Integer>>> result = null;
+		try {
+			result = GetClusterStates.concurrentGetClusterStates(cl);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		long end_time = System.nanoTime();
+		System.out.println("Finished! \nConcurrent processing took: "+ (end_time - start_time) / 1.0e9 + "s\n");
+		return result;
+	}
+	
+	
+	public static void rankTopics(HashMap<String, List<HashMap<String, Integer>>> topics,final double per) {
 		List<Map.Entry<String, List<HashMap<String, Integer>>>> al = new ArrayList<Map.Entry<String, List<HashMap<String, Integer>>>>(topics.entrySet());
+		//Sorting the HashMap by given criteria
 		Collections.sort(al, new Comparator<Object>() {
 			public int compare(Object o1, Object o2) {
 				@SuppressWarnings("unchecked")
@@ -65,10 +99,11 @@ public class ClusteringDocumentList {
 			key = "Number of States";
 		else
 			key = "Combined measurment";
-		int top=10;
-		System.out.println("\nTop " + top +" topics ranked by " + key + ":");
+		
+		int top = 10;
+		System.out.println("\nTop " + top + " topics ranked by " + key + " ("+per+")");
 		int count = 0;
-		for (Entry<String, List<HashMap<String, Integer>>> entry : al) {
+		for (Entry<String, List<HashMap<String, Integer>>> entry : al){
 			if (count == top)
 				break;
 			if (!entry.getKey().equals("Other Topics")) {
@@ -77,61 +112,46 @@ public class ClusteringDocumentList {
 			}
 		}
 	}
+	
 
 	public static void main(String[] args) {
-		/*
-		 * [[[start:clustering-document-list-intro]]]
-		 * 
-		 * <div> <p> The easiest way to get started with Carrot2 is to cluster a
-		 * collection of {@link org.carrot2.core.Document}s. Each document can
-		 * consist of: </p>
-		 * 
-		 * <ul> <li>document content: a query-in-context snippet, document
-		 * abstract or full text,</li> <li>document title: optional, some
-		 * clustering algorithms give more weight to document titles,</li>
-		 * <li>document URL: optional, used by the {@link
-		 * org.carrot2.clustering.synthetic.ByUrlClusteringAlgorithm}, ignored
-		 * by other algorithms.</li> </ul>
-		 * 
-		 * <p> To make the example short, the code shown below clusters only 5
-		 * documents. Use at least 20 to get reasonable clusters. If you have
-		 * access to the query that generated the documents being clustered, you
-		 * should also provide it to Carrot2 to get better clusters. </p> </div>
-		 * 
-		 * [[[end:clustering-document-list-intro]]]
-		 */
-
 		/* Prepare Carrot2 documents */
+		String USLatLong="-179.15,18.9,-66.94,71.44";
 		final ArrayList<Document> documents = new ArrayList<Document>();
-		Document[] tweets = new CrawlingTweets().run(30,"-179.15,18.9,-66.94,71.44");
+		Document[] tweets = new CrawlingTweets().run(Integer.parseInt(args[0]), USLatLong);
 		documents.addAll(Arrays.asList(tweets));
 
+		
 		/* A controller to manage the processing pipeline. */
 		final Controller controller = ControllerFactory.createSimple();
-            
-            //Document[] tweets=new CrawlingTweets().run(120,"-179.15,18.9,-66.94,71.44");
-            //documents.addAll(Arrays.asList(tweets));
-
-
-		/*
-		 * Perform clustering by topic using the Lingo algorithm. Lingo can take
-		 * advantage of the original query, so we provide it along with the
-		 * documents.
-		 */
-		System.out.println("Begining clustering");
-		final ProcessingResult byTopicClusters = controller.process(documents,
-				null, LingoClusteringAlgorithm.class);
+		System.out.println("Clustering...");
+		long start_time = System.nanoTime();
+		final ProcessingResult byTopicClusters = controller.process(documents,null, LingoClusteringAlgorithm.class);
 		final List<Cluster> clustersByTopic = byTopicClusters.getClusters();
-		System.out.println("Finished clustering");
+		long end_time = System.nanoTime();
+		System.out.println("Finished!\nClustering took: "+ (end_time - start_time) / 1.0e9 + "s\n");
 
-		HashMap<String, List<HashMap<String, Integer>>> topics = GetClusterStates.returnClusterStates(clustersByTopic);
-		//System.out.println(topics);
+		
+		//Drawing maps to ./maps folder
+		System.out.println("Drawing maps...");
+		long s = System.nanoTime();
+		GetClusterStates.drawingMap(clustersByTopic, "./maps/");
+		long e = System.nanoTime();
+		System.out.println("Finished!\nDrawing took: "+ (e - s) / 1.0e9 + "s\n");
+		
+		
+		// Run it sequentially and concurrently
+		HashMap<String, List<HashMap<String, Integer>>> topicsSeq = processSequential(clustersByTopic);
+		HashMap<String, List<HashMap<String, Integer>>> topicsCon=processConcurrent(clustersByTopic);
 
-		rankTopics(topics, 1);
-		rankTopics(topics, 0);
-		rankTopics(topics, 0.2);
-		rankTopics(topics, 0.8);
+		
+		//Rank the results
+		rankTopics(topicsSeq, 1);
+		rankTopics(topicsCon, 0);
+		rankTopics(topicsSeq, 0.2);
+		rankTopics(topicsSeq, 0.8);
 
+		
 		//ConsoleFormatter.displayClusters(clustersByTopic);
 		ConsoleFormatter.displayJustClusterTopics(clustersByTopic);
 	}

@@ -31,8 +31,9 @@ public class CrawlingTweets {
 			BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
 			int count=0;
 			
-			System.out.println("Start fetching Tweets...");
+			System.out.println("Fetching Tweets...");
 			String readline = "";
+			long start_time = System.nanoTime();
 			while ((readline = in.readLine()) != null) {
 				if(count==TweetsNo)
 					break;
@@ -58,7 +59,8 @@ public class CrawlingTweets {
 					}
 				}	
 			}
-			System.out.println("Finished fetching...");
+			long end_time = System.nanoTime();
+			System.out.println("Finished!\nFetching "+TweetsNo+" tweets took: "+(end_time - start_time) / 1.0e9 + "s\n");
 			in.close();
 			return TweetsCollection;
 		} catch (MalformedURLException e1) {
